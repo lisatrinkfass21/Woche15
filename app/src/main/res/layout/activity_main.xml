@@ -14,45 +14,49 @@
 
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonLoad"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:layout_weight="0.8"
             android:background="#57B0D8"
+            android:onClick="onclickLoad"
             android:text="LOAD"
             android:textSize="11sp"
             app:backgroundTint="@null" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonSave"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:layout_weight="0.8"
             android:background="#57B0D8"
+            android:onClick="onclickSave"
             android:text="SAVE"
             android:textSize="11sp"
             app:backgroundTint="@null" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/buttonShow"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:layout_weight="1.2"
             android:background="#57B0D8"
+            android:onClick="onclickShow"
             android:text="SHOW SETTINGS"
             android:textSize="11sp"
             app:backgroundTint="@null" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/buttonScore"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:layout_weight="0.8"
             android:background="#57B0D8"
+            android:onClick="onclickScore"
             android:text="SCORE"
             android:textSize="11sp"
             app:backgroundTint="@null" />
@@ -66,7 +70,7 @@
 
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/nextguess"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
@@ -76,11 +80,12 @@
             android:text="next guess" />
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/buttonSubmit"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="1dp"
             android:background="#57B0D8"
+            android:onClick="onclickSubmit"
             android:text="SUBMIT"
             android:textSize="11sp"
             app:backgroundTint="@null" />
