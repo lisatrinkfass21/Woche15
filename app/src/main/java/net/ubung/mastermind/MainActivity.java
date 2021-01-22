@@ -6,6 +6,8 @@ import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     int guessRounds = 0;
     String correctPositionSign = null;
     String correctCodeElementSign = null;
+    String randomCode = null;
 
     private List<String> items = new ArrayList<>();
     private ListView list;
@@ -81,6 +84,20 @@ public class MainActivity extends AppCompatActivity {
 
 
         //eigl logik:
+
+
+
+        items.clear();
+        bindAdapterToListView(list);
+        StringBuilder sb = new StringBuilder();
+        char x ;
+        int num;
+        for(int i = 0; i< this.codeLength; i++){
+            num = (int) ((Math.random()+1)*alphabet.size());
+            x = alphabet.get(num-1);
+            sb.append(x);
+        }
+        this.randomCode = sb.toString();
     }
 
     private void getCorrectElementSign(String s) {
@@ -156,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     public void onclickSubmit(View view){
 
     }
-
+   //zusatz
     public void onclickScore(View view){
 
     }
@@ -176,8 +193,11 @@ public class MainActivity extends AppCompatActivity {
       items.add("correctCodeElementSign");
       items.add(this.correctCodeElementSign);
       bindAdapterToListView(list);
+    }
 
 
+    public void onclickNewGame(View view){
+        start();
 
     }
 }

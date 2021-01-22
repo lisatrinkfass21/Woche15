@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
     tools:context=".MainActivity">
 
     <TableRow
@@ -77,8 +78,8 @@
             android:layout_margin="1dp"
             android:layout_weight="3"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="next guess" />
+            android:inputType="text"
+            android:hint ="next guess" />
 
         <Button
             android:id="@+id/buttonSubmit"
@@ -97,5 +98,22 @@
         android:id="@+id/myList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4" />
+        android:layout_weight="3.95" />
+    <TableRow
+        android:id="@+id/TableRow"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5" >
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#57B0D8"
+            android:onClick="onclickNewGame"
+            android:text="START NEW GAME"
+            android:textSize="11sp"
+            app:backgroundTint="@null" />
+    </TableRow>
+
 </LinearLayout>
