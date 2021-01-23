@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         this.randomCode = sb.toString();
+        System.out.println(this.randomCode);
     }
 
     private void getCorrectElementSign(String s) {
@@ -172,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onclickSave(View view){
+        if(items != null){
+            
+        }
 
     }
 
@@ -179,18 +183,18 @@ public class MainActivity extends AppCompatActivity {
         EditText et = findViewById(R.id.nextguess);
         String text;
         if(this.guessRounds != 0){
-            if(et.getText().toString()!=null){
+            if(et.getText().toString()!=null && et.getText().toString().length()== this.codeLength){
                 text = et.getText().toString();
                 String correct = vergleiche(text);
                 items.add(text + " | " + correct);
                 list = findViewById(R.id.myList);
                 bindAdapterToListView(list);
             }else{
-                Toast.makeText(getApplicationContext(), "Konfigurationsdatei nicht korrekt / 2", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "falsche / keine Eingabe", Toast.LENGTH_LONG).show();
             }
         }else{
             Toast.makeText(getApplicationContext(), "keine freien Tipps mehr", Toast.LENGTH_LONG).show();
-            items.add("Der Code wäre: "+this.randomCode);
+            items.add("NOT SOLVED: "+this.randomCode);
             list = findViewById(R.id.myList);
             bindAdapterToListView(list);
         }
@@ -206,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
                 sb = this.correctPositionSign + sb;
             }else if(this.randomCode.contains(String.valueOf(text.charAt(i)))){
                 sb= sb+this.correctCodeElementSign;
+            }else if(!alphabet.contains(text.charAt(i))){
+                Toast.makeText(getApplicationContext(), "1 Element gehört nicht zum Alphabet", Toast.LENGTH_LONG).show();
             }
         }
         this.guessRounds--;
