@@ -10,6 +10,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -86,16 +87,19 @@ public class MainActivity extends AppCompatActivity {
         //eigl logik:
 
 
-
+        list = findViewById(R.id.myList);
         items.clear();
         bindAdapterToListView(list);
         StringBuilder sb = new StringBuilder();
         char x ;
         int num;
         for(int i = 0; i< this.codeLength; i++){
-            num = (int) ((Math.random()+1)*alphabet.size());
+            num = (int) (Math.random()*alphabet.size()+1);
             x = alphabet.get(num-1);
             sb.append(x);
+            if(!this.doubleAllowed){//wenn Elemente im Code nur einmal vorkommen soll
+                alphabet.remove(num-1);
+            }
         }
         this.randomCode = sb.toString();
     }
@@ -137,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getAlphabet(String line) {
         System.out.println("alphabet");
+        alphabet.clear();
         if(line != null && line.contains(",")){
             String[] alpha = line.split(",");
             for (String al : alpha) {
@@ -171,7 +176,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onclickSubmit(View view){
+        EditText et = findViewById(R.id.nextguess);
+        String text;
+        if(this.guessRounds != 0){
+            if(et.getText().toString()!=null){
+                text = et.getText().toString();
+                String correct = vergleiche(text);
+                items.add(text + " | " + correct);
+                list = findViewById(R.id.myList);
+                bindAdapterToListView(list);
+            }else{
+                Toast.makeText(getApplicationContext(), "Konfigurationsdatei nicht korrekt / 2", Toast.LENGTH_LONG).show();
+            }
+        }else{
+            Toast.makeText(getApplicationContext(), "keine freien Tipps mehr", Toast.LENGTH_LONG).show();
+            items.add("Der Code wäre: "+this.randomCode);
+            list = findViewById(R.id.myList);
+            bindAdapterToListView(list);
+        }
+        et.setText("");
 
+    }
+
+    private String vergleiche(String text){
+        String perfect = this.correctPositionSign+this.correctPositionSign+this.correctPositionSign+this.correctPositionSign;
+        String sb = "";
+        for(int i = 0; i< this.codeLength; i++){
+            if(text.charAt(i)==this.randomCode.charAt(i)){
+                sb = this.correctPositionSign + sb;
+            }else if(this.randomCode.contains(String.valueOf(text.charAt(i)))){
+                sb= sb+this.correctCodeElementSign;
+            }
+        }
+        this.guessRounds--;
+        if(sb.equals(perfect)){
+            this.guessRounds=0;
+            Toast.makeText(getApplicationContext(), "Code erraten - Spiel zu Ende", Toast.LENGTH_LONG).show();
+            return "SOLVED";
+
+        }
+        return sb;
     }
    //zusatz
     public void onclickScore(View view){
