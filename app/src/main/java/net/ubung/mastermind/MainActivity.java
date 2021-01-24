@@ -1,20 +1,14 @@
 package net.ubung.mastermind;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.res.AssetManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -27,7 +21,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private List<String> items = new ArrayList<>();
     private ListView list;
     private ArrayAdapter<String> adap;
+
+    private final String FILE = "Spielstand.txt";
 
     private Set<String> winGames = new TreeSet<>(new Comparator<String>() {
         @Override
@@ -123,12 +119,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-
         //eigl logik:
-
 
         list = findViewById(R.id.myList);
         items.clear();
@@ -213,11 +204,80 @@ public class MainActivity extends AppCompatActivity {
 
     public void onclickLoad(View view){
 
+            items.clear();
+            try{
+                FileInputStream fis = openFileInput(this.FILE);
+                BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+                String line = in.readLine();
+                while(line  != null){
+                    if(line.contains("code")){
+                       line = line.substring(6,(6+this.codeLength));
+                        this.randomCode = line;
+                    }else if(line.contains("offeneTipps")){
+                        int pos = line.indexOf("/");
+                        line = line.substring(13,( pos-1));
+                        this.guessRounds = Integer.parseInt(line);
+                    }else if(line.contains("guess")){
+                        String input = in.readLine();
+                        int pos = input.indexOf("/");
+                        input = input.substring(11, (pos-1));
+
+
+                        String res = in.readLine();
+                         pos = res.indexOf("/");
+                         res = res.substring(8, (pos-1));
+                        items.add(input+" | "+res);
+                        line = in.readLine();
+                    }
+                    line = in.readLine();
+
+                }
+                list = findViewById(R.id.myList);
+                bindAdapterToListView(list);
+                in.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        if(items.isEmpty()){
+            Toast.makeText(getApplicationContext(), "kein offener Spielstand", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     public void onclickSave(View view){
-        if(items != null){
-            
+        if(!items.isEmpty()){
+            try{
+                FileOutputStream fos = openFileOutput(FILE, MODE_PRIVATE );
+                PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+                    out.println("<saveState>");
+                    out.flush();
+                    out.println("<code>"+this.randomCode+"</code");
+                    out.flush();
+                    out.println("<offeneTipps>"+guessRounds+"</offeneTipps>");
+                    for(int i = 0; i< items.size(); i++){
+                        String item = items.get(i).replace(" ","");
+                        String[] it = item.split("\\|");
+                        out.println("<guess"+(i+1)+">");
+                        out.flush();
+                        out.println("<userInput>"+it[0]+"</userInput>");
+                        out.flush();
+                        out.println("<result>"+it[1]+"</result>");
+                        out.flush();
+                        out.println("</guess"+(i+1)+">");
+                        out.flush();
+                    }
+                out.println("</saveState>");
+                out.flush();
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+                start();
+        }else{
+            Toast.makeText(getApplicationContext(), "kein offener Spielstand", Toast.LENGTH_LONG).show();
         }
 
     }
