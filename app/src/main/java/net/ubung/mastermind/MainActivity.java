@@ -1,8 +1,10 @@
 package net.ubung.mastermind;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private List<String> items = new ArrayList<>();
     private ListView list;
     private ArrayAdapter<String> adap;
+
+    private List<String> winGames = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +208,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
     private String vergleiche(String text){
         String perfect = this.correctPositionSign+this.correctPositionSign+this.correctPositionSign+this.correctPositionSign;
         String sb = "";
@@ -216,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
         }
         this.guessRounds--;
         if(sb.equals(perfect)){
+            
             this.guessRounds=0;
             Toast.makeText(getApplicationContext(), "Code erraten - Spiel zu Ende", Toast.LENGTH_LONG).show();
             return "SOLVED";
@@ -225,6 +234,11 @@ public class MainActivity extends AppCompatActivity {
     }
    //zusatz
     public void onclickScore(View view){
+        list = findViewById(R.id.myList);
+        if(!items.isEmpty()){
+            items.clear();
+            bindAdapterToListView(list);
+        }
 
     }
 

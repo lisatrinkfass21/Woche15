@@ -9,10 +9,12 @@
 
     tools:context=".MainActivity">
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5">
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
+
 
 
         <Button
@@ -63,12 +65,13 @@
             android:textSize="11sp"
             app:backgroundTint="@null" />
 
-    </TableRow>
+    </LinearLayout>
 
-    <TableRow
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5">
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
 
 
         <EditText
@@ -92,18 +95,20 @@
             android:textSize="11sp"
             app:backgroundTint="@null" />
 
-    </TableRow>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/myList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3.95" />
-    <TableRow
+
+    <LinearLayout
         android:id="@+id/TableRow"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5" >
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/button2"
@@ -114,6 +119,6 @@
             android:text="START NEW GAME"
             android:textSize="11sp"
             app:backgroundTint="@null" />
-    </TableRow>
+    </LinearLayout>
 
 </LinearLayout>
