@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+       >
 
 
 
@@ -71,7 +72,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+>
 
 
         <EditText
@@ -101,14 +103,16 @@
         android:id="@+id/myList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3.95" />
+        android:layout_weight="3.95"
+    />
 
     <LinearLayout
         android:id="@+id/TableRow"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+ >
 
         <Button
             android:id="@+id/button2"

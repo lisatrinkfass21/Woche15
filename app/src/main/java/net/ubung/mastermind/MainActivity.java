@@ -17,13 +17,24 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +50,33 @@ public class MainActivity extends AppCompatActivity {
     private ListView list;
     private ArrayAdapter<String> adap;
 
-    private List<String> winGames = new ArrayList<>();
+    private Set<String> winGames = new TreeSet<>(new Comparator<String>() {
+        @Override
+        public int compare(String s1, String s2){
+
+
+            s1 = s1.replace(" ", "");
+            s2 = s2.replace(" ", "");
+
+            String[] StringS1 = s1.split("\\|");
+            String[] StringS2 = s2.split("\\|");
+
+
+            if(StringS1[1].equals(StringS2[1])){
+                try{
+                SimpleDateFormat sdf = new SimpleDateFormat("mm:ss", Locale.GERMAN);
+                Date date1 = sdf.parse(StringS1[2]);
+                Date date2 = sdf.parse(StringS2[2]);
+
+                return date1.compareTo(date2);
+            } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+            return StringS1[1].compareTo(StringS2[1]);
+    }});
+    long start = 0;
+    long finish = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
         }
         this.randomCode = sb.toString();
         System.out.println(this.randomCode);
+
+        start = System.currentTimeMillis();
     }
 
     private void getCorrectElementSign(String s) {
@@ -164,14 +203,12 @@ public class MainActivity extends AppCompatActivity {
 
     private InputStream getInputStreamForAsset(String filename){
         AssetManager assets = getAssets();
-
         try{
             return assets.open(filename);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-
     }
 
     public void onclickLoad(View view){
@@ -224,7 +261,14 @@ public class MainActivity extends AppCompatActivity {
         }
         this.guessRounds--;
         if(sb.equals(perfect)){
-            
+            finish = System.currentTimeMillis();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm");
+            String date = sdf.format(new Date());
+            sdf = new SimpleDateFormat("mm:ss");
+            String time = sdf.format(new Date(finish-start));
+            String te = (date +" | "+ (12-guessRounds) + "Rounds | "+ time);
+           // winGames.add(te);
+            writeFile(te);
             this.guessRounds=0;
             Toast.makeText(getApplicationContext(), "Code erraten - Spiel zu Ende", Toast.LENGTH_LONG).show();
             return "SOLVED";
@@ -232,11 +276,47 @@ public class MainActivity extends AppCompatActivity {
         }
         return sb;
     }
+
+    private void writeFile(String text){
+        String filename = "score.sc.txt";
+        try{
+            FileOutputStream fos = openFileOutput(filename, MODE_PRIVATE | MODE_APPEND);
+            PrintWriter out = new PrintWriter(new OutputStreamWriter(fos));
+            out.println(text);
+            out.flush();
+            out.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void readFile(){
+        winGames.clear();
+        try{
+            FileInputStream fis = openFileInput("score.sc.txt");
+            BufferedReader in = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            while((line = in.readLine()) != null){
+                winGames.add(line);
+            }
+            in.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
    //zusatz
     public void onclickScore(View view){
         list = findViewById(R.id.myList);
-        if(!items.isEmpty()){
+        readFile();
+        if(!winGames.isEmpty()){
             items.clear();
+            for (String game : winGames) {
+                items.add(game);
+            }
             bindAdapterToListView(list);
         }
 
